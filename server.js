@@ -53,21 +53,3 @@ app.get('/department', (req,res)=>{
   app.listen(PORT, () =>
   console.log(`Server listening on: http://localhost:${PORT}`)
 );
-
-
-// Const Table
-
-
-// var employee = [
-//     ["Account Management","Senior Program Manager",100000.00,1,"Ariana","Winters",1]
-// ]
-// console.table([{
-//     Department_Name: "Account Mangement",
-//     Title: "Senior Program Manager",
-//     Salary: 100000.00,
-//     Department_ID: 1,
-//     First_Name: "Ariana",
-//     Last_Name: "Winters",
-//     Role_ID: 1,
-//     Manager_ID: 1
-// }]);
