@@ -3,15 +3,12 @@ const inquirer = require("inquirer");
 const mysql = require("mysql");
 const express = require("express");
 const app = express();
-const dotenv = require("dotenv");
-
-require('dotenv').config()
+const dotenv = require("dotenv").config();
 
 const connection = mysql.createConnection({
   host: "localhost",
   port: 3306,
   user: "root",
-  // Be sure to update with your own MySQL password!
   password: process.env.PASSWORD,
   database: "employees_tracking_db",
 });
@@ -23,6 +20,8 @@ connection.connect((err) => {
   }
   console.log(`connected as id ${connection.threadId}`);
 });
+
+//Main Menu Table
 
 const mainMenuTable = () =>
   inquirer.prompt([
@@ -37,10 +36,11 @@ const mainMenuTable = () =>
         "View departments",
         "View roles",
         "View employees",
-        "Update employee roles",
       ],
     },
   ]);
+
+//Inquirer to build an employee
 
 const buildEmployee = () =>
   inquirer.prompt([
@@ -68,6 +68,8 @@ const buildEmployee = () =>
     },
   ]);
 
+//Inquirer to build a department
+
 const buildDepartment = () =>
   inquirer.prompt([
     {
@@ -76,6 +78,8 @@ const buildDepartment = () =>
       name: "deptName",
     },
   ]);
+
+//Inquirer to build a role
 
   const buildRole = () =>
   inquirer.prompt([
@@ -101,6 +105,9 @@ const buildDepartment = () =>
 mainMenuTable()
   .then((response) => {
     console.log(response.menuList);
+
+    //If user selects 'View departments' a list of all added departments will be visible
+
     if (response.menuList === "View departments") {
       const sqlCommand = "SELECT * FROM department ORDER BY id ASC";
       connection.query(sqlCommand, (err, result) => {
@@ -108,6 +115,9 @@ mainMenuTable()
         console.table(result);
       });
     }
+
+//If user selects 'View roles' a list of all added roles will be visible
+
     if (response.menuList === "View roles") {
       const sqlCommand = "SELECT * FROM role ORDER BY id ASC";
       connection.query(sqlCommand, (err, result) => {
@@ -115,6 +125,9 @@ mainMenuTable()
         console.table(result);
       });
     }
+
+//If user selects 'View employees' a list of all added employees will be visible
+
     if (response.menuList === "View employees") {
       const sqlCommand = "SELECT * FROM employee ORDER BY id ASC";
       connection.query(sqlCommand, (err, result) => {
@@ -122,6 +135,9 @@ mainMenuTable()
         console.table(result);
       });
     }
+
+//If user selects 'Add an employee' they will be prompted to add employee information which will be added to the employee list
+
     if (response.menuList === "Add an employee") {
       buildEmployee().then((response) => {
         const sqlCommand = `INSERT INTO employee (first_name,last_name,role_id,manager_id) VALUES ('${response.firstName}','${response.lastName}','${response.roleId}','${response.managerId}')`;
@@ -130,6 +146,9 @@ mainMenuTable()
         });
       });
     }
+
+//If user selects 'Add a department' they will be prompted to add department information which will be added to the department list
+
     if (response.menuList === "Add a department") {
       buildDepartment().then((response) => {
         const sqlCommand = `INSERT INTO department (name) VALUES ('${response.deptName}')`;
@@ -138,6 +157,9 @@ mainMenuTable()
         });
       });
     }
+
+//If user selects 'Add a role' they will be prompted to add role information which will be added to the role list
+
     if (response.menuList === "Add a role") {
         buildRole().then((response) => {
           const sqlCommand = `INSERT INTO role (title,salary,department_id) VALUES ('${response.roleTitle}','${response.salary}','${response.departmentId}')`;
