@@ -3,13 +3,16 @@ const inquirer = require("inquirer");
 const mysql = require("mysql");
 const express = require("express");
 const app = express();
+const dotenv = require("dotenv");
+
+require('dotenv').config()
 
 const connection = mysql.createConnection({
   host: "localhost",
   port: 3306,
   user: "root",
   // Be sure to update with your own MySQL password!
-  password: "Coggy0501!",
+  password: process.env.PASSWORD,
   database: "employees_tracking_db",
 });
 
